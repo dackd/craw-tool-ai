@@ -4,7 +4,7 @@ const fs = require("fs");
 const ToolifyCrawler = require("./crawler");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // Store file cleanup timers
 const fileCleanupTimers = new Map();
