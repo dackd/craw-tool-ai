@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toolify Crawler</title>
+  <title>Tool AI Crawler</title>
   <style>
     * {
       margin: 0;
@@ -27,16 +27,16 @@
       border-radius: 20px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
       padding: 40px;
-      width: 100%;
       max-width: 600px;
+      width: 100%;
       text-align: center;
     }
 
-    h1 {
+    .logo {
+      font-size: 2.5rem;
+      font-weight: bold;
       color: #333;
       margin-bottom: 10px;
-      font-size: 2.5rem;
-      font-weight: 700;
     }
 
     .subtitle {
@@ -53,9 +53,8 @@
     label {
       display: block;
       margin-bottom: 8px;
-      color: #333;
       font-weight: 600;
-      font-size: 1rem;
+      color: #333;
     }
 
     input[type="url"] {
@@ -63,18 +62,13 @@
       padding: 15px;
       border: 2px solid #e1e5e9;
       border-radius: 10px;
-      font-size: 1rem;
+      font-size: 16px;
       transition: border-color 0.3s ease;
       outline: none;
     }
 
     input[type="url"]:focus {
       border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    input[type="url"].error {
-      border-color: #dc3545;
     }
 
     .btn {
@@ -83,7 +77,7 @@
       border: none;
       padding: 15px 30px;
       border-radius: 10px;
-      font-size: 1.1rem;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -102,170 +96,272 @@
       transform: none;
     }
 
-    .status {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
-      font-weight: 600;
-      display: none;
-    }
-
-    .status.success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .status.error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .status.loading {
-      background-color: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
-    }
-
-    .download-link {
-      display: inline-block;
+    .download-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
       margin-top: 15px;
-      padding: 12px 24px;
-      background: #28a745;
-      color: white;
-      text-decoration: none;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .download-section {
+      margin-top: 15px;
+    }
+
+    .countdown {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      color: #856404;
+      padding: 10px;
       border-radius: 8px;
+      margin-bottom: 15px;
       font-weight: 600;
-      transition: background-color 0.3s ease;
     }
 
-    .download-link:hover {
-      background: #218838;
+    #countdown {
+      font-weight: bold;
+      color: #e74c3c;
     }
 
-    .example-url {
-      font-size: 0.9rem;
-      color: #666;
-      margin-top: 10px;
-      font-style: italic;
-    }
-
-    .validation-note {
-      font-size: 0.85rem;
-      color: #dc3545;
-      margin-top: 5px;
-      font-weight: 500;
+    .loading {
+      display: none;
+      margin: 20px 0;
     }
 
     .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
       border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-      margin-right: 10px;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
     }
 
     @keyframes spin {
-      to {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
         transform: rotate(360deg);
       }
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .result.success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .result.error {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    .examples {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .examples h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .example-urls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .example-url {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #495057;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .example-url:hover {
+      background: #e9ecef;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>🕷️ Toolify Crawler</h1>
-    <p class="subtitle">Extract tool information from Toolify.ai categories</p>
+    <div class="logo">🕷️ Tool AI Crawler</div>
+    <div class="subtitle">Extract tool information from Toolify.ai categories</div>
 
     <form id="crawlForm">
       <div class="form-group">
-        <label for="targetUrl">Target URL:</label>
+        <label for="targetUrl">Category URL:</label>
         <input type="url" id="targetUrl" name="targetUrl"
-          placeholder="https://www.toolify.ai/category/ai-blog-generator" required>
-        <div class="example-url">
-          Example: https://www.toolify.ai/category/ai-blog-generator
-        </div>
-        <div class="validation-note">
-          ⚠️ URL must start with "https://www.toolify.ai/category/"
-        </div>
+          placeholder="https://www.toolify.ai/category/ai-background-remover" required>
       </div>
 
-      <button type="submit" class="btn" id="submitBtn">
-        <span id="btnText">Start Crawling</span>
-        <span id="btnSpinner" class="spinner" style="display: none;"></span>
+      <button type="submit" class="btn" id="crawlBtn">
+        🚀 Start Crawling
       </button>
     </form>
 
-    <div id="status" class="status"></div>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <div>🔄 Crawling in progress... This may take a few minutes.</div>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="examples">
+      <h3>📋 Popular Categories:</h3>
+      <div class="example-urls">
+        <div class="example-url" onclick="setUrl('https://www.toolify.ai/category/ai-background-remover')">
+          AI Background Remover
+        </div>
+        <div class="example-url" onclick="setUrl('https://www.toolify.ai/category/resume-ai')">
+          Resume AI
+        </div>
+        <div class="example-url" onclick="setUrl('https://www.toolify.ai/category/prompt-engineering')">
+          Prompt Engineering
+        </div>
+        <div class="example-url" onclick="setUrl('https://www.toolify.ai/category/ai-image-generator')">
+          AI Image Generator
+        </div>
+        <div class="example-url" onclick="setUrl('https://www.toolify.ai/category/ai-music-generator')">
+          AI Music Generator
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
     const form = document.getElementById('crawlForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const btnSpinner = document.getElementById('btnSpinner');
-    const status = document.getElementById('status');
     const targetUrlInput = document.getElementById('targetUrl');
+    const crawlBtn = document.getElementById('crawlBtn');
+    const loading = document.getElementById('loading');
+    const result = document.getElementById('result');
 
-    function showStatus(message, type) {
-      status.textContent = message;
-      status.className = `status ${type}`;
-      status.style.display = 'block';
+    function setUrl(url) {
+      targetUrlInput.value = url;
     }
 
-    function hideStatus() {
-      status.style.display = 'none';
+    function showLoading() {
+      loading.style.display = 'block';
+      result.style.display = 'none';
+      crawlBtn.disabled = true;
+      crawlBtn.textContent = '⏳ Crawling...';
     }
 
-    function setLoading(loading) {
-      submitBtn.disabled = loading;
-      btnText.textContent = loading ? 'Crawling...' : 'Start Crawling';
-      btnSpinner.style.display = loading ? 'inline-block' : 'none';
+    function hideLoading() {
+      loading.style.display = 'none';
+      crawlBtn.disabled = false;
+      crawlBtn.textContent = '🚀 Start Crawling';
     }
 
-    function validateUrl(url) {
-      if (!url.trim()) {
-        return { valid: false, error: "URL is required" };
-      }
+    function showResult(success, message, filename = null) {
+      result.style.display = 'block';
+      result.className = `result ${success ? 'success' : 'error'}`;
 
-      if (!url.startsWith("https://www.toolify.ai/category/")) {
-        return { valid: false, error: "URL must start with 'https://www.toolify.ai/category/'" };
-      }
+      if (success && filename) {
+        result.innerHTML = message + `
+                    <br><br>
+                    <div class="download-section">
+                        <div class="countdown">⏰ File will be auto-deleted in <span id="countdown">2:00</span></div>
+                        <button onclick="downloadFile('${filename}')" class="btn download-btn">
+                            📥 Download Excel File
+                        </button>
+                    </div>
+                `;
 
-      return { valid: true };
-    }
-
-    // Real-time validation
-    targetUrlInput.addEventListener('input', function () {
-      const url = this.value.trim();
-      const validation = validateUrl(url);
-
-      if (url && !validation.valid) {
-        this.classList.add('error');
+        // Start countdown timer
+        startCountdown(filename);
       } else {
-        this.classList.remove('error');
+        result.innerHTML = message;
       }
-    });
+    }
+
+    function startCountdown(filename) {
+      let timeLeft = 120; // 2 minutes in seconds
+
+      const countdownElement = document.getElementById('countdown');
+      const countdownInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        timeLeft--;
+
+        if (timeLeft < 0) {
+          clearInterval(countdownInterval);
+          // Show message that file was auto-deleted
+          showResult(true, `
+                        ⏰ <strong>File auto-deleted!</strong><br><br>
+                        📁 The Excel file was automatically deleted after 2 minutes.<br>
+                        🔄 Please run the crawler again to generate a new file.
+                    `);
+        }
+      }, 1000);
+    }
+
+    function downloadFile(filename) {
+      // Clear any existing countdown
+      const countdownElement = document.getElementById('countdown');
+      if (countdownElement) {
+        countdownElement.parentElement.parentElement.remove();
+      }
+
+      const link = document.createElement('a');
+      link.href = `/download/${filename}`;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Show success message
+      setTimeout(() => {
+        showResult(true, `
+                    ✅ <strong>Download completed!</strong><br><br>
+                    📁 The Excel file has been downloaded to your computer.<br>
+                    🗑️ The file has been automatically deleted from the server.
+                `);
+      }, 1000);
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const targetUrl = targetUrlInput.value.trim();
 
-      // Client-side validation
-      const validation = validateUrl(targetUrl);
-      if (!validation.valid) {
-        showStatus(validation.error, 'error');
+      if (!targetUrl) {
+        showResult(false, '❌ Please enter a valid URL');
         return;
       }
 
-      setLoading(true);
-      hideStatus();
+      if (!targetUrl.includes('toolify.ai/category/')) {
+        showResult(false, '❌ Please enter a valid Toolify.ai category URL');
+        return;
+      }
+
+      showLoading();
 
       try {
         const response = await fetch('/crawl', {
@@ -279,25 +375,22 @@
         const data = await response.json();
 
         if (data.success) {
-          showStatus(data.message, 'success');
-
-          // Create download link
-          const downloadLink = document.createElement('a');
-          downloadLink.href = data.downloadUrl;
-          downloadLink.className = 'download-link';
-          downloadLink.textContent = `📥 Download ${data.filename}`;
-          downloadLink.download = data.filename;
-
-          status.appendChild(document.createElement('br'));
-          status.appendChild(downloadLink);
-
+          showResult(true, `
+                        ✅ <strong>Crawling completed successfully!</strong><br><br>
+                        📊 <strong>Results:</strong><br>
+                        • Total tools found: ${data.totalProducts}<br>
+                        • Category: ${data.categoryName}<br>
+                        • File ready: ${data.filename}<br><br>
+                        💾 Click the download button below to get your Excel file.
+                    `, data.filename);
         } else {
-          showStatus(`Error: ${data.error}`, 'error');
+          showResult(false, `❌ Error: ${data.error}`);
         }
       } catch (error) {
-        showStatus(`Network error: ${error.message}`, 'error');
+        showResult(false, '❌ Network error. Please try again.');
+        console.error('Error:', error);
       } finally {
-        setLoading(false);
+        hideLoading();
       }
     });
   </script>

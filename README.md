@@ -1,98 +1,66 @@
 # Tool AI Crawler
 
-A web-based tool crawler for scraping toolify.ai categories with a user interface.
+A Node.js web crawler built with Puppeteer that extracts tool information from [Toolify.ai](https://www.toolify.ai) categories and exports the data to Excel files.
 
-## Features
+## Prerequisites
 
-- Web-based interface for crawling toolify.ai categories
-- Exports data to Excel format
-- Automatic file cleanup
-- Docker support for cloud deployment
+- Node.js (version 18.0.0 or higher)
+- npm (comes with Node.js)
 
-## Local Development
+## Installation
 
-1. Install dependencies:
+### Step 1: Install Node.js
 
+**Windows:**
+
+1. Download Node.js from [nodejs.org](https://nodejs.org/)
+2. Run the installer and follow the setup wizard
+3. Verify installation by opening Command Prompt and running:
    ```bash
-   npm install
+   node --version
+   npm --version
    ```
 
-2. Start the server:
+### Step 2: Install Project Dependencies
 
-   ```bash
-   npm start
-   ```
+Navigate to your project directory and install dependencies:
 
-3. Open http://localhost:8080 in your browser
+```bash
+npm install
+```
 
-## Docker Deployment
+## Usage
 
-### Local Docker Build
+### Web Interface (Recommended)
 
-1. Build the Docker image:
+Start the web server and use the beautiful UI:
 
-   ```bash
-   docker build -t tool-ai-crawler .
-   ```
+```bash
+npm run server
+```
 
-2. Run the container:
-   ```bash
-   docker run -p 8080:8080 tool-ai-crawler
-   ```
+Then open your browser and go to: `http://localhost:3000`
 
-### Google Cloud Run Deployment
+The web interface provides:
 
-#### Option 1: Using Cloud Build (Recommended)
+- 🎨 **Beautiful UI** with modern design
+- 📝 **Easy URL input** with validation
+- 🔄 **Real-time progress** tracking
+- 📊 **Instant results** display
+- 📋 **Popular categories** with one-click selection
 
-1. Enable required APIs:
+### Command Line Interface
 
-   ```bash
-   gcloud services enable cloudbuild.googleapis.com
-   gcloud services enable run.googleapis.com
-   ```
+Run the crawler with a specific category URL:
 
-2. Deploy using Cloud Build:
-   ```bash
-   gcloud builds submit --config cloudbuild.yaml
-   ```
+```bash
+npm start <targetUrl>
+```
 
-#### Option 2: Manual Deployment
+### Examples
 
-1. Build and push to Container Registry:
+**Crawl AI Background Remover tools:**
 
-   ```bash
-   docker build -t gcr.io/[PROJECT-ID]/tool-ai-crawler .
-   docker push gcr.io/[PROJECT-ID]/tool-ai-crawler
-   ```
-
-2. Deploy to Cloud Run:
-   ```bash
-   gcloud run deploy tool-ai-crawler \
-     --image gcr.io/[PROJECT-ID]/tool-ai-crawler \
-     --platform managed \
-     --region us-central1 \
-     --allow-unauthenticated \
-     --memory 2Gi \
-     --cpu 2 \
-     --timeout 900 \
-     --max-instances 10
-   ```
-
-## Configuration
-
-The application uses the following environment variables:
-
-- `PORT`: Server port (default: 8080)
-
-## Architecture
-
-- **Frontend**: Static HTML/CSS/JS served by Express
-- **Backend**: Node.js with Express
-- **Web Scraping**: Puppeteer for browser automation
-- **Data Export**: XLSX for Excel file generation
-
-## Security Notes
-
-- The application runs as a non-root user in the container
-- Files are automatically cleaned up after download
-- Input validation is performed on URLs
+```bash
+npm start https://www.toolify.ai/category/ai-background-remover
+```
