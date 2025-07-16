@@ -1,0 +1,24 @@
+{
+  "name": "tool-ai-crawler",
+  "version": "1.0.0",
+  "description": "Web-based tool crawler with user interface",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crawler",
+    "web",
+    "puppeteer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^24.10.1",
+    "xlsx": "^0.18.5",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "path": "^0.12.7"
+  }
+}

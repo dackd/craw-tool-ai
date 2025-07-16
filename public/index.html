@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toolify Crawler</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    input[type="url"] {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      outline: none;
+    }
+
+    input[type="url"]:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    input[type="url"].error {
+      border-color: #dc3545;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .status.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status.loading {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .download-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 24px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    .download-link:hover {
+      background: #218838;
+    }
+
+    .example-url {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    .validation-note {
+      font-size: 0.85rem;
+      color: #dc3545;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🕷️ Toolify Crawler</h1>
+    <p class="subtitle">Extract tool information from Toolify.ai categories</p>
+
+    <form id="crawlForm">
+      <div class="form-group">
+        <label for="targetUrl">Target URL:</label>
+        <input type="url" id="targetUrl" name="targetUrl"
+          placeholder="https://www.toolify.ai/category/ai-blog-generator" required>
+        <div class="example-url">
+          Example: https://www.toolify.ai/category/ai-blog-generator
+        </div>
+        <div class="validation-note">
+          ⚠️ URL must start with "https://www.toolify.ai/category/"
+        </div>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">
+        <span id="btnText">Start Crawling</span>
+        <span id="btnSpinner" class="spinner" style="display: none;"></span>
+      </button>
+    </form>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('crawlForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const status = document.getElementById('status');
+    const targetUrlInput = document.getElementById('targetUrl');
+
+    function showStatus(message, type) {
+      status.textContent = message;
+      status.className = `status ${type}`;
+      status.style.display = 'block';
+    }
+
+    function hideStatus() {
+      status.style.display = 'none';
+    }
+
+    function setLoading(loading) {
+      submitBtn.disabled = loading;
+      btnText.textContent = loading ? 'Crawling...' : 'Start Crawling';
+      btnSpinner.style.display = loading ? 'inline-block' : 'none';
+    }
+
+    function validateUrl(url) {
+      if (!url.trim()) {
+        return { valid: false, error: "URL is required" };
+      }
+
+      if (!url.startsWith("https://www.toolify.ai/category/")) {
+        return { valid: false, error: "URL must start with 'https://www.toolify.ai/category/'" };
+      }
+
+      return { valid: true };
+    }
+
+    // Real-time validation
+    targetUrlInput.addEventListener('input', function () {
+      const url = this.value.trim();
+      const validation = validateUrl(url);
+
+      if (url && !validation.valid) {
+        this.classList.add('error');
+      } else {
+        this.classList.remove('error');
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const targetUrl = targetUrlInput.value.trim();
+
+      // Client-side validation
+      const validation = validateUrl(targetUrl);
+      if (!validation.valid) {
+        showStatus(validation.error, 'error');
+        return;
+      }
+
+      setLoading(true);
+      hideStatus();
+
+      try {
+        const response = await fetch('/crawl', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ targetUrl })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showStatus(data.message, 'success');
+
+          // Create download link
+          const downloadLink = document.createElement('a');
+          downloadLink.href = data.downloadUrl;
+          downloadLink.className = 'download-link';
+          downloadLink.textContent = `📥 Download ${data.filename}`;
+          downloadLink.download = data.filename;
+
+          status.appendChild(document.createElement('br'));
+          status.appendChild(downloadLink);
+
+        } else {
+          showStatus(`Error: ${data.error}`, 'error');
+        }
+      } catch (error) {
+        showStatus(`Network error: ${error.message}`, 'error');
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+
+</html>
